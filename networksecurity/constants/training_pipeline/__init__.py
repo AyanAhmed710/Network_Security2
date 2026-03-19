@@ -16,8 +16,8 @@ TEST_FILE_NAME :str = "test.csv"
 #Data Ingestion Constants
 
 
-DATA_INGESTION_COLLECTION_NAME : str="Network_Security"
-DATA_INGESTION_DATABASE_NAME :str="Data"
+DATA_INGESTION_DATABASE_NAME : str="Network_Security"
+DATA_INGESTION_COLLECTION_NAME :str="Data"
 DATA_INGESTION_DIR_NAME :str="data_ingestion"
 DATA_INGESTION_FEATURE_STORE_DIR :str ="feature_store"
 DATA_INGESTION_INGESTED_DIR_NAME :str="ingested"
