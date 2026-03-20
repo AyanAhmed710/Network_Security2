@@ -11,3 +11,16 @@ class DataIngestionArtifact:
 
     def __str__(self) -> str:
         return f"DataIngestionArtifact(feature_store_file_path={self.feature_store_file_path}, train_file_path={self.train_file_path}, test_file_path={self.test_file_path})"
+    
+
+@dataclass
+class DataValidationArtifact:
+    validation_status : bool
+    valid_train_file_path: str
+    valid_test_file_path: str
+    invalid_train_file_path: str
+    invalid_test_file_path: str
+    drift_report_file_path: str
+
+    def __str__(self) -> str:
+        return f"DataValidationArtifact(valid_train_file_path={self.valid_train_file_path}, valid_test_file_path={self.valid_test_file_path}, invalid_train_file_path={self.invalid_train_file_path}, invalid_test_file_path={self.invalid_test_file_path}, drift_report_file_path={self.drift_report_file_path})"
