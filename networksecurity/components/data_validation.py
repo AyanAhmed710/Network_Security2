@@ -46,6 +46,8 @@ class DataValidation:
         except Exception as e:
             raise NetworkSecurityException(e, sys)
         
+    
+        
 
     def validate_data_drift(self, base_df: pd.DataFrame, current_df: pd.DataFrame ,threshold=0.05) -> bool:
         try:
