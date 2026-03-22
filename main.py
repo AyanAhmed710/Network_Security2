@@ -1,3 +1,23 @@
+import os
+import dagshub
+import sys
+
+
+load_dotenv()
+
+# Only set if not already defined in the environment (EC2 will have these pre-set)
+if os.environ.get("DAGSHUB_USERNAME") and os.environ.get("DAGSHUB_TOKEN"):
+    os.environ["MLFLOW_TRACKING_USERNAME"] = os.environ["DAGSHUB_USERNAME"]
+    os.environ["MLFLOW_TRACKING_PASSWORD"] = os.environ["DAGSHUB_TOKEN"]
+
+dagshub.init(repo_owner='sheikhayanahmad710', repo_name='Network_Security2', mlflow=True)
+import io
+
+# Fix Windows cp1252 encoding issue with MLflow emoji output
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
+
 from networksecurity.components.data_ingestion import DataIngestion
 from networksecurity.entity.config_entity import TrainingPipelineConfig, DataIngestionConfig ,DataValidationConfig ,DataTransformationConfig ,ModelTrainerConfig
 from networksecurity.entity.artifact_entity import DataIngestionArtifact
@@ -6,7 +26,12 @@ from networksecurity.exception.exception import NetworkSecurityException
 from networksecurity.components.data_validation import DataValidation
 from networksecurity.components.data_transformation import DataTransformation
 from networksecurity.components.model_trainer import ModelTrainer
+from dotenv import load_dotenv
 import sys
+import os
+
+
+
 
 main_logger = get_logger("Main")
 

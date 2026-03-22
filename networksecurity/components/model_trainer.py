@@ -3,8 +3,11 @@ import sys
 
 from networksecurity.entity.config_entity import ModelTrainerConfig
 from networksecurity.exception.exception import NetworkSecurityException
-from networksecurity.logging.logger import logging
+from networksecurity.logging.logger import get_logger
 from networksecurity.entity.artifact_entity import ModelTrainerArtifact ,DataTransformationArtifact
+import mlflow
+
+
 
 from networksecurity.utils import load_object ,save_object ,load_numpy_array ,write_yaml_file
 from networksecurity.utils.ml_utils.model.estimator import NetworkModel
@@ -15,13 +18,35 @@ from sklearn.ensemble import (RandomForestClassifier , GradientBoostingClassifie
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import r2_score
+import dagshub
+
+model_trainer_logger =get_logger("ModelTrainer")
+
+
 
 class ModelTrainer:
     def __init__(self , model_trainer_config : ModelTrainerConfig , data_transformation_artifact : DataTransformationArtifact ):
         try:
+            model_trainer_logger.info("Model Trainer Initialised")
             self.model_trainer_config = model_trainer_config
             self.data_transformation_artifact = data_transformation_artifact
            
+        except Exception as e:
+            raise NetworkSecurityException(e, sys)
+
+    def track_matric(self , model , classification_metric):
+        try:
+            f1_score = classification_metric.f1_score
+            precision = classification_metric.precision
+            recall = classification_metric.recall
+
+            with mlflow.start_run(run_name = "model_trainer") as mlflow_run:
+                mlflow.log_params(model.get_params())
+                mlflow.log_metric("f1_score", f1_score)
+                mlflow.log_metric("precision", precision)
+                mlflow.log_metric("recall", recall)
+                mlflow.sklearn.log_model(model , "model")
+        
         except Exception as e:
             raise NetworkSecurityException(e, sys)
         
@@ -99,6 +124,10 @@ class ModelTrainer:
 
         test_model_score = get_classification_score(y_test , y_test_pred)
 
+        self.track_matric(best_model ,train_model_score)
+
+        self.track_matric(best_model ,test_model_score)
+
         preprocessor =load_object(file_path=self.data_transformation_artifact.preprocessor_object_file_path)
 
         network_model =NetworkModel(preprocessor=preprocessor , model=best_model)
@@ -120,13 +149,17 @@ class ModelTrainer:
     def initiate_model_trainer(self) -> ModelTrainerArtifact:
         try:
             
+            model_trainer_logger.info("Model Trainer Initialised")
             train_file_path= self.data_transformation_artifact.transformed_train_file_path
             test_file_path= self.data_transformation_artifact.transformed_test_file_path
             train_data = load_numpy_array(train_file_path)
             test_data = load_numpy_array(test_file_path)
+            model_trainer_logger.info("Model Trainer data loaded successfully")
 
             x_train , y_train = train_data[:,:-1] , train_data[:,-1]
             x_test , y_test = test_data[:,:-1] , test_data[:,-1]
+
+            model_trainer_logger.info("Model Trainer data split successfully")
 
             model_trainer_artifact =self.train_model(x_train , y_train ,x_test , y_test)
 
