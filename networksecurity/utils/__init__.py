@@ -42,3 +42,19 @@ def save_object(file_path :str , obj):
             pass
     except Exception as e:
         raise NetworkSecurityException(e, sys)
+    
+
+def load_object(file_path :str ):
+    try:
+        with open(file_path, "rb") as file_obj:
+            return pickle.load(file_obj)
+    except Exception as e:
+        raise NetworkSecurityException(e, sys)
+    
+
+def load_numpy_array(file_path: str):
+    try:
+        with open(file_path, 'rb') as file_obj:
+            return np.load(file_obj)
+    except Exception as e:
+        raise NetworkSecurityException(e, sys)

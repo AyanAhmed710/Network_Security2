@@ -31,3 +31,16 @@ class DataTransformationArtifact :
     transformed_train_file_path : str
     transformed_test_file_path : str
     preprocessor_object_file_path : str
+
+@dataclass
+class MetricsArtifiact :
+    precision :float
+    f1_score : float
+    recall :float
+ 
+
+@dataclass
+class ModelTrainerArtifact:
+    trained_model_file_path: str
+    train_metric_artifact: MetricsArtifiact
+    test_metric_artifact: MetricsArtifiact

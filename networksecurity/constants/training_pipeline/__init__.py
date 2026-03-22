@@ -50,3 +50,13 @@ DATA_TRANSFORMATION_IMPUTER_PARAMS : dict ={
     "n_neighbors" : 3,
     "weights" : "uniform",
 }
+
+
+#Model Trainer Constants
+
+MODEL_TRAINER_DIR_NAME :str="model_trainer"
+MODEL_TRAINING_REPORT_NAME :str="report.yaml"
+MODEL_TRAINER_TRAINED_MODEL_DIR :str="trained_model"
+MODEL_TRAINER_TRAINED_MODEL_NAME :str="model.pkl"
+MODEL_TRAINER_EXPECTED_ACCURACY :float = 0.6
+MODEL_UNDERFITTING_OVERFITTING_THRESHOLD :float = 0.05
