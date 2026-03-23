@@ -22,10 +22,13 @@ from networksecurity.components.data_ingestion import DataIngestion
 from networksecurity.entity.config_entity import TrainingPipelineConfig, DataIngestionConfig ,DataValidationConfig ,DataTransformationConfig ,ModelTrainerConfig
 from networksecurity.entity.artifact_entity import DataIngestionArtifact
 from networksecurity.logging.logger import get_logger
+from networksecurity.utils import save_object
+from networksecurity.utils import load_object
 from networksecurity.exception.exception import NetworkSecurityException
 from networksecurity.components.data_validation import DataValidation
 from networksecurity.components.data_transformation import DataTransformation
 from networksecurity.components.model_trainer import ModelTrainer
+from networksecurity.constants.training_pipeline import FINAL_PUSHED_MODEL_PATH
 from dotenv import load_dotenv
 import sys
 import os
@@ -66,6 +69,12 @@ if __name__ == "__main__":
         model_trainer = ModelTrainer(model_trainer_config, data_transformation_artifact)
         model_trainer_artifact = model_trainer.initiate_model_trainer()
         main_logger.info("Model trainer completed successfully.")
+
+        push_status=False
+
+        if push_status ==True :
+            save_object(file_path=FINAL_PUSHED_MODEL_PATH, obj=load_object(model_trainer_artifact.trained_model_file_path))
+            save_object(file_path=FINAL_PUSHED_MODEL_PATH, obj=load_object(data_transformation_artifact.preprocessor_object_file_path))
 
 
 

@@ -1,6 +1,0 @@
-AdaBoostClassifier: 0.7291028355198452
-DecisionTreeClassifier: 0.8323017553218091
-GradientBoostingClassifier: 0.8820583773691844
-KNeighborsClassifier: 0.8378302688826285
-LogisticRegression: 0.690403240594109
-RandomForestClassifier: 0.8654728366867259
