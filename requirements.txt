@@ -5,12 +5,14 @@ pymongo
 certifi
 pyyaml
 dill
-fastapi
 scikit-learn
 uvicorn
 python-multipart
 mlflow
 dagshub
+fastapi==0.115.5
+starlette==0.41.3
+jinja2==3.1.6
 
 -e .
 
