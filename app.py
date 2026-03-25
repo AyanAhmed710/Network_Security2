@@ -1,269 +1,73 @@
-# import sys
-# import os
-# import pymongo
-# from networksecurity.exception.exception import NetworkSecurityException
-# from networksecurity.logging.logger import get_logger
-# from networksecurity.utils.ml_utils.model.estimator import NetworkModel
-# from networksecurity.utils import load_object
-
-# import certifi
-# ca =certifi.where()
-
-# from dotenv import load_dotenv
-# load_dotenv()
-
-# from networksecurity.pipeline.training_pipeline import Training_Pipeline
-# from fastapi.middleware.cors import CORSMiddleware
-# from uvicorn import run as app_run
-
-# from fastapi import FastAPI ,File ,UploadFile ,Request
-# from fastapi.responses import Response
-# from starlette.responses import RedirectResponse
-# import pandas as pd
-
-# from networksecurity.constants.training_pipeline import DATA_INGESTION_DATABASE_NAME
-
-# from networksecurity.constants.training_pipeline import DATA_INGESTION_COLLECTION_NAME
-
-# from fastapi.templating import Jinja2Templates
-
-
-# client =pymongo.MongoClient(os.getenv("MONGO_DB_URL"))
-# database =client[DATA_INGESTION_DATABASE_NAME]
-# collection=database[DATA_INGESTION_COLLECTION_NAME]
-
-# app=FastAPI()
-
-# origins = ["*"]
-
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=origins,
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
-
-# mongo_db_url=os.getenv("MONGO_DB_URL")
-
-# pipeline=Training_Pipeline()
-
-# templates=Jinja2Templates(directory="./templates")
-
-
-
-
-
-# @app.get("/", tags=["authentication"])
-# async def index():
-#     return RedirectResponse(url="/docs")
-
-
-# @app.get('/train')
-# async def train():
-#     try:
-#         pipeline.run_pipeline()
-#         return Response("Training successful !!")
-#     except Exception as e:
-#         return Response(f"Error Occurred! {e}")
-    
-
-# @app.post('/predict')
-# async def predict(request  : Request ,file: UploadFile = File(...)):
-
-#     try:
-#         df =pd.read_csv(file.file)
-#         # preprocessor =load_object("preprocessor.pkl")
-#         model = load_object(r"D:\MLOPS\Network_Security2\Network_Security2\final_model\model.pkl")
-#         # pipeline=NetworkModel(preprocessor , model)
-#         y_pred=model.predict(df)
-
-#         df["predicted_column"] = y_pred
-#         print(df["predicted_column"])
-
-#         df.to_csv(r"D:\MLOPS\Network_Security2\Network_Security2\prediction_output\output.csv")
-
-#         table_html = df.to_html(classes='table table-striped')
-
-#         return templates.TemplateResponse("table.html",{"request":request,"table":table_html})
-#     except Exception as e:
-#         return Response(f"Error Occurred! {e}")
-
-    
-
-# if __name__ == "__main__":
-#     app_run("app:app", host="0.0.0.0", port=8000)
-
-
-# import sys
-# import os
-# import pymongo
-# from networksecurity.exception.exception import NetworkSecurityException
-# from networksecurity.logging.logger import get_logger
-# from networksecurity.utils.ml_utils.model.estimator import NetworkModel
-# from networksecurity.utils import load_object
-# import io
-
-# import certifi
-# ca = certifi.where()
-
-# from dotenv import load_dotenv
-# load_dotenv()
-
-# from networksecurity.pipeline.training_pipeline import Training_Pipeline
-# from fastapi.middleware.cors import CORSMiddleware
-# from uvicorn import run as app_run
-
-# from fastapi import FastAPI, File, UploadFile, Request
-# from fastapi.responses import Response
-# from starlette.responses import RedirectResponse
-# import pandas as pd
-# from jinja2 import Environment, FileSystemLoader
-# from starlette.templating import Jinja2Templates
-
-
-# from networksecurity.constants.training_pipeline import DATA_INGESTION_DATABASE_NAME
-# from networksecurity.constants.training_pipeline import DATA_INGESTION_COLLECTION_NAME
-
-# from jinja2 import Environment, FileSystemLoader, BaseLoader
-# from jinja2.bccache import NullBytecodeCache
-# from starlette.templating import Jinja2Templates
-
-# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# env = Environment(
-#     loader=FileSystemLoader(os.path.join(BASE_DIR, "templates")),
-#     auto_reload=True,
-#     bytecode_cache=NullBytecodeCache(),  # ← disables cache completely
-# )
-# env.cache = None  # ← force disable cache
-
-# templates = Jinja2Templates(env=env)
-
-
-
-# # Base directory relative to this file
-# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# client = pymongo.MongoClient(os.getenv("MONGO_DB_URL"))
-# database = client[DATA_INGESTION_DATABASE_NAME]
-# collection = database[DATA_INGESTION_COLLECTION_NAME]
-
-# app = FastAPI()
-
-# origins = ["*"]
-
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=origins,
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
-# mongo_db_url = os.getenv("MONGO_DB_URL")
-
-# pipeline = Training_Pipeline()
-
-# templates = Jinja2Templates(env=Environment(
-#     loader=FileSystemLoader("templates"),
-#     auto_reload=True
-# ))
-
-
-# @app.get("/", tags=["authentication"])
-# async def index(request: Request):
-#     return templates.TemplateResponse("index.html", {"request": request})
-
-
-# @app.get('/train')
-# async def train():
-#     try:
-#         pipeline.run_pipeline()
-#         return Response("Training successful !!")
-#     except Exception as e:
-#         return Response(f"Error Occurred! {e}")
-
-
-# @app.post('/predict')
-# async def predict(request: Request, file: UploadFile = File(...)): 
-#     try:
-
-#         contents = await file.read()
-#         df = pd.read_csv(io.StringIO(contents.decode('utf-8')))
-
-        
-
-#         # Relative path to model
-#         model_path = os.path.join(BASE_DIR, "final_model", "model.pkl")
-#         model = load_object(model_path)
-
-#         y_pred = model.predict(df)
-#         df["predicted_column"] = y_pred
-#         print(df["predicted_column"])
-
-#         # Create output directory if it doesn't exist
-#         output_dir = os.path.join(BASE_DIR, "prediction_output")
-#         os.makedirs(output_dir, exist_ok=True)
-
-#         output_path = os.path.join(output_dir, "output.csv")
-#         df.to_csv(output_path, index=False)
-
-#         table_html = df.to_html(classes='table table-striped')
-#         return templates.TemplateResponse("table.html", {"request": request, "table": table_html})
-
-#     except Exception as e:
-#         return Response(f"Error Occurred! {e}")
-
-
-# if __name__ == "__main__":
-#     app_run("app:app", host="0.0.0.0", port=8000)
-
-
-
 import sys
 import os
 import pymongo
 import io
+import pickle
+import traceback
 from networksecurity.exception.exception import NetworkSecurityException
 from networksecurity.logging.logger import get_logger
-from networksecurity.utils.ml_utils.model.estimator import NetworkModel
-from networksecurity.utils import load_object
+from networksecurity.pipeline.training_pipeline import Training_Pipeline
 import certifi
 ca = certifi.where()
 
 from dotenv import load_dotenv
 load_dotenv()
 
-from networksecurity.pipeline.training_pipeline import Training_Pipeline
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
 from uvicorn import run as app_run
 from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import Response
-from starlette.responses import RedirectResponse
-from starlette.templating import Jinja2Templates
-from jinja2 import Environment, FileSystemLoader
-
 import pandas as pd
 
-from networksecurity.constants.training_pipeline import DATA_INGESTION_DATABASE_NAME
-from networksecurity.constants.training_pipeline import DATA_INGESTION_COLLECTION_NAME
-
-# ✅ Single BASE_DIR definition
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# ✅ Single clean templates setup
-env = Environment(
-    loader=FileSystemLoader(os.path.join(BASE_DIR, "templates")),
-    auto_reload=True,
+from networksecurity.constants.training_pipeline import (
+    DATA_INGESTION_DATABASE_NAME,
+    DATA_INGESTION_COLLECTION_NAME
 )
-env.cache = {}
-templates = Jinja2Templates(env=env)
 
-client = pymongo.MongoClient(os.getenv("MONGO_DB_URL"))
-database = client[DATA_INGESTION_DATABASE_NAME]
-collection = database[DATA_INGESTION_COLLECTION_NAME]
+# ─── Startup Diagnostics ─────────────────────────────────────────────────────
+print("=" * 60)
+print("[STARTUP] app.py is loading...")
+print(f"[STARTUP] Python version: {sys.version}")
+print(f"[STARTUP] Working directory: {os.getcwd()}")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+print(f"[STARTUP] BASE_DIR: {BASE_DIR}")
+
+# Check templates folder
+templates_dir = os.path.join(BASE_DIR, "templates")
+if os.path.exists(templates_dir):
+    print(f"[STARTUP] Templates folder found: {templates_dir}")
+    print(f"[STARTUP] Templates inside: {os.listdir(templates_dir)}")
+else:
+    print(f"[STARTUP] ❌ Templates folder MISSING at: {templates_dir}")
+
+# Check model file
+model_path = os.path.join(BASE_DIR, "final_model", "model.pkl")
+if os.path.exists(model_path):
+    print(f"[STARTUP] Model file found: {model_path}")
+else:
+    print(f"[STARTUP] ❌ Model file MISSING at: {model_path}")
+
+# ✅ Clean single-line templates setup
+try:
+    templates = Jinja2Templates(directory=templates_dir)
+    print("[STARTUP] ✅ Jinja2Templates initialized successfully")
+except Exception as e:
+    print(f"[STARTUP] ❌ Jinja2Templates init failed: {e}")
+    traceback.print_exc()
+
+# MongoDB connection
+try:
+    client = pymongo.MongoClient(os.getenv("MONGO_DB_URL"), tlsCAFile=ca)
+    database = client[DATA_INGESTION_DATABASE_NAME]
+    collection = database[DATA_INGESTION_COLLECTION_NAME]
+    print("[STARTUP] ✅ MongoDB connected successfully")
+except Exception as e:
+    print(f"[STARTUP] ❌ MongoDB connection failed: {e}")
+
+print("[STARTUP] Starting FastAPI app...")
+print("=" * 60)
 
 app = FastAPI()
 
@@ -275,45 +79,100 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-pipeline = Training_Pipeline()
+try:
+    pipeline = Training_Pipeline()
+    print("[STARTUP] ✅ Training_Pipeline initialized")
+except Exception as e:
+    print(f"[STARTUP] ❌ Training_Pipeline init failed: {e}")
+    traceback.print_exc()
 
+
+# ─── Routes ──────────────────────────────────────────────────────────────────
 
 @app.get("/", tags=["authentication"])
 async def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    print("[GET /] Request received")
+    try:
+        print("[GET /] Attempting to render index.html...")
+        response = templates.TemplateResponse("index.html", {"request": request})
+        print("[GET /] ✅ index.html rendered successfully")
+        return response
+    except Exception as e:
+        print(f"[GET /] ❌ Failed to render index.html")
+        print(traceback.format_exc())
+        return Response(f"Error rendering index: {str(e)}", status_code=500)
 
 
 @app.get('/train')
 async def train():
+    print("[GET /train] Training started...")
     try:
         pipeline.run_pipeline()
+        print("[GET /train] ✅ Training completed successfully")
         return Response("Training successful !!")
     except Exception as e:
-        return Response(f"Error Occurred! {e}")
+        print(f"[GET /train] ❌ Training failed")
+        print(traceback.format_exc())
+        return Response(f"Error during training: {str(e)}", status_code=500)
 
 
 @app.post('/predict')
 async def predict(request: Request, file: UploadFile = File(...)):
+    print("[POST /predict] Request received")
     try:
+        # Step 1: Read uploaded file
+        print(f"[POST /predict] Reading uploaded file: {file.filename}")
         contents = await file.read()
+        print(f"[POST /predict] File size: {len(contents)} bytes")
+
+        # Step 2: Parse CSV
         df = pd.read_csv(io.StringIO(contents.decode('utf-8')))
+        print(f"[POST /predict] ✅ CSV parsed — shape: {df.shape}")
+        print(f"[POST /predict] Columns: {df.columns.tolist()}")
 
-        model_path = os.path.join(BASE_DIR, "final_model", "model.pkl")
-        model = load_object(model_path)
+        # Step 3: Load model
+        print(f"[POST /predict] Loading model from: {model_path}")
+        if not os.path.exists(model_path):
+            raise FileNotFoundError(f"Model not found at {model_path}")
+        with open(model_path, "rb") as f:
+            model = pickle.load(f)
+        print(f"[POST /predict] ✅ Model loaded — type: {type(model)}")
+        print(f"[POST /predict] Preprocessor type: {type(model.preprocessor)}")
+        print(f"[POST /predict] Inner model type: {type(model.model)}")
 
+        # Step 4: Predict
+        print("[POST /predict] Running prediction...")
         y_pred = model.predict(df)
-        df["predicted_column"] = y_pred
-        print(df["predicted_column"])
+        print(f"[POST /predict] ✅ Prediction done — sample: {y_pred[:5]}")
 
+        # Step 5: Append predictions to df
+        df["predicted_column"] = y_pred
+        print(f"[POST /predict] DF with predictions shape: {df.shape}")
+
+        # Step 6: Save output
         output_dir = os.path.join(BASE_DIR, "prediction_output")
         os.makedirs(output_dir, exist_ok=True)
-        df.to_csv(os.path.join(output_dir, "output.csv"), index=False)
+        output_path = os.path.join(output_dir, "output.csv")
+        df.to_csv(output_path, index=False)
+        print(f"[POST /predict] ✅ Output saved to: {output_path}")
 
+        # Step 7: Render template
+        print("[POST /predict] Generating HTML table...")
         table_html = df.to_html(classes='table table-striped')
-        return templates.TemplateResponse("table.html", {"request": request, "table": table_html})
+        print(f"[POST /predict] HTML table length: {len(table_html)} chars")
+
+        print("[POST /predict] Rendering table.html template...")
+        response = templates.TemplateResponse(
+            "table.html",
+            {"request": request, "table": table_html}
+        )
+        print("[POST /predict] ✅ Template rendered successfully — returning response")
+        return response
 
     except Exception as e:
-        return Response(f"Error Occurred! {e}")
+        print(f"[POST /predict] ❌ Error occurred")
+        print(traceback.format_exc())
+        return Response(f"Error: {str(e)}", status_code=500)
 
 
 if __name__ == "__main__":
