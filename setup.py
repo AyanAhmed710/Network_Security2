@@ -3,19 +3,16 @@ from typing import List
 
 
 def get_requirements() -> List[str]:
-
-    try : 
-        requirements_lst=[]
-        with open('requirements.txt' , 'r') as f :
-
-            for line in f.readlines() :
-                line.strip()
+    try: 
+        requirements_lst = []
+        with open('requirements.txt', 'r') as f:
+            for line in f.readlines():
+                line = line.strip()  # ← assign it back
                 if line and line != '-e .':
                     requirements_lst.append(line)
 
-    except FileNotFoundError :
-        print("Requirements file not found. Please ensure 'requirements.txt' exists.")
-
+    except FileNotFoundError:
+        print("Requirements file not found.")
 
     return requirements_lst
 
