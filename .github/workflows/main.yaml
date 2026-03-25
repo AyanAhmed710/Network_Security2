@@ -97,7 +97,7 @@ jobs:
         run: |
           docker run -d \
             --name my-app \
-            -p 80:8080 \
+            -p 80:8000 \
             --restart always \
             $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
