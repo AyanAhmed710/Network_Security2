@@ -166,8 +166,9 @@ async def train():
 
 
 @app.post('/predict')
-async def predict(request: Request, file: UploadFile = File(...)):
+async def predict(request: Request, file: UploadFile = File(...)): 
     try:
+
         df = pd.read_csv(file.file)
 
         # Relative path to model

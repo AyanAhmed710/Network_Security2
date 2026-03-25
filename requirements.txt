@@ -12,4 +12,6 @@ python-multipart
 mlflow
 dagshub
 
+-e .
+
 #-e . This command is used to install the current package in editable mode. It allows you to make changes to the code and have those changes reflected immediately without needing to reinstall the package. This is particularly useful during development when you want to test changes frequently.
