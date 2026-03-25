@@ -119,12 +119,14 @@ from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.responses import Response
 from starlette.responses import RedirectResponse
 import pandas as pd
+from jinja2 import Environment, FileSystemLoader
+from starlette.templating import Jinja2Templates
 
 
 from networksecurity.constants.training_pipeline import DATA_INGESTION_DATABASE_NAME
 from networksecurity.constants.training_pipeline import DATA_INGESTION_COLLECTION_NAME
 
-from fastapi.templating import Jinja2Templates
+
 
 # Base directory relative to this file
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -149,7 +151,10 @@ mongo_db_url = os.getenv("MONGO_DB_URL")
 
 pipeline = Training_Pipeline()
 
-templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
+templates = Jinja2Templates(env=Environment(
+    loader=FileSystemLoader("templates"),
+    auto_reload=True
+))
 
 
 @app.get("/", tags=["authentication"])
