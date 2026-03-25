@@ -103,6 +103,7 @@ from networksecurity.exception.exception import NetworkSecurityException
 from networksecurity.logging.logger import get_logger
 from networksecurity.utils.ml_utils.model.estimator import NetworkModel
 from networksecurity.utils import load_object
+import io
 
 import certifi
 ca = certifi.where()
@@ -169,7 +170,10 @@ async def train():
 async def predict(request: Request, file: UploadFile = File(...)): 
     try:
 
-        df = pd.read_csv(file.file)
+        contents = await file.read()
+        df = pd.read_csv(io.StringIO(contents.decode('utf-8')))
+
+        
 
         # Relative path to model
         model_path = os.path.join(BASE_DIR, "final_model", "model.pkl")
@@ -194,4 +198,4 @@ async def predict(request: Request, file: UploadFile = File(...)):
 
 
 if __name__ == "__main__":
-    app_run("app:app", host="0.0.0.0", port=8000)
+    app_run("app:app", host="localhost", port=8000)
