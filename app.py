@@ -93,4 +93,4 @@ async def predict(request  : Request ,file: UploadFile = File(...)):
     
 
 if __name__ == "__main__":
-    app_run("app:app", host="localhost", port=8000)
+    app_run("app:app", host="0.0.0.0", port=8000)
