@@ -244,7 +244,7 @@ from fastapi.responses import Response
 from starlette.responses import RedirectResponse
 from starlette.templating import Jinja2Templates
 from jinja2 import Environment, FileSystemLoader
-from jinja2.bccache import NullBytecodeCache
+
 import pandas as pd
 
 from networksecurity.constants.training_pipeline import DATA_INGESTION_DATABASE_NAME
@@ -257,9 +257,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 env = Environment(
     loader=FileSystemLoader(os.path.join(BASE_DIR, "templates")),
     auto_reload=True,
-    bytecode_cache=NullBytecodeCache(),
 )
-env.cache = None
+env.cache = {}
 templates = Jinja2Templates(env=env)
 
 client = pymongo.MongoClient(os.getenv("MONGO_DB_URL"))
