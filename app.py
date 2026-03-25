@@ -153,8 +153,8 @@ templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
 
 @app.get("/", tags=["authentication"])
-async def index():
-    return RedirectResponse(url="/docs")
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get('/train')
